@@ -16,6 +16,12 @@ class Evento:
     
     def get_detalhes(self):
         print(f'Nome: {self.__nome}\n Data: {self.__data}\n Local: {self.__local}\n Capacidade: {self.__capacidade_maxima}\n Categoria: {self.__categoria}\n Preco: {self.__preco}\n Inscritos: {self.__inscritos}') # retorna todas as informações da classe Principal.
+    def get_categoria(self):
+        return self.__categoria # metodo para retornar a categoria do evento 
+    
+    def get_data(self):
+        return self.__data ## retorna a data do evento
+    
 class Workshop(Evento):
     def __init__(self, nome, data, local, capacidade_maxima, categoria, preco,material_necessario):
         super().__init__(nome, data, local, capacidade_maxima, categoria, preco) ## reutilização de alguns parametros da classe principal
@@ -49,6 +55,8 @@ class Participante:
     def exibir_detalhes(self):
         print(f'Nome do Participante: {self.__nome}\n Email: {self.__email}\n Evento: {self.__evento.get_nome()}') ## Atributos de nome , email e evento sao privados , na ultima ocasiao que passei o self.evento get nome ele ira pegar o nome exclusivamento do evento que O participante esta alocado !
         
+    def get_email(self):
+        return self.__email ## criado para fazer a verificação do email dentro do sistema e tambem para retornar o email do participante
         
 class Sistema_Evento:
     def __init__(self):
@@ -65,4 +73,37 @@ class Sistema_Evento:
         
     def listar_eventos(self):
         for evento in self.__lista_eventos: ## metodo para imprimir toda a lista de eventos
-           pass
+            evento.get_detalhes()
+            print("-" * 20)
+            
+    def buscar_por_categoria(self,categoria): ## busca a categoria do evento onde foi criada  na base da classe  evento
+        self.categoria = categoria
+        for buscar in self.__lista_eventos: ## percorre toda a lista de eventos 
+            if buscar.get_categoria() == self.categoria: ## se a categoria buscada foi igual a categoria solicitada encontramos
+                buscar.get_detalhes() ## retorna as informaçoes do evento
+                print("-" * 20)
+                
+    def buscar_por_data(self,data_busca): ## metodo para buscar a data do evento 
+        self.data_busca = data_busca
+        print(f"--- EVENTOS ENCONTRADOS NA DATA: {data_busca} ---")
+        
+        for evento in self.__lista_eventos: ## se a data do evento for igual a data atual solicitada pelo usuario encotramos a data
+            if evento.get_data() == self.data_busca:
+                evento.get_detalhes()
+                print("-" * 20)
+                
+    def cancelar_inscricao(self,email): # metoodo para cancelar a inscrição
+        self.email = email 
+        participantes_para_remover = [] # lista vazia contendo os participantes que queremos remover
+        for participante in self.__lista_Participantes: ## um loop para percorrer toda a lista de participantes
+            if participante.get_email() == self.email: # se o email for igual adicionaremos na lista para remover o participante
+                participantes_para_remover.append(participante)
+        if participantes_para_remover:    
+            for participante in participantes_para_remover:
+                self.__lista_Participantes.remove(participante)
+            print(f"Inscrição do email {email} cancelada com sucesso.")
+            
+        else:
+            print(f"Participante com email {email} não encontrado.")
+            
+                
